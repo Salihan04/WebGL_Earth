@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Earth</title>
+
+<style>
+	body {
+		background-color: #FFFF99;
+        padding-left: 30px;
+	}
+</style>
+</head>
+
+<body>
+	<header>
+		<h1>Earth - Night</h1>
+		<div>Creating the Earth with WebGL using Three.js library</div>
+	</header></br>
+
+	<div><h2><u>Night</u></h2></div>
+
+	<script src="js/three.min.js"></script>
+	<script>
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000);
+
+		var renderer = new THREE.WebGLRenderer();
+		renderer.setSize(500, 500);
+		document.body.appendChild(renderer.domElement);
+
+		scene.add(new THREE.AmbientLight(0x333333));
+
+		//Lighting
+		var light = new THREE.DirectionalLight(0xffffff, 1);
+		light.position.set(5, 3, 5);
+		scene.add(light);
+
+		var geometry = new THREE.SphereGeometry(0.5, 32, 32);
+		var material = new THREE.MeshPhongMaterial();
+		var earthMesh = new THREE.Mesh(geometry, material);
+		scene.add(earthMesh);
+
+		material.map = THREE.ImageUtils.loadTexture("images/earthmap1k.jpg");
+		material.bumpMap = THREE.ImageUtils.loadTexture("images/earthbump1k.jpg");
+		material.bumpScale = 0.05;
+		material.specularMap = THREE.ImageUtils.loadTexture("images/earthspec1k.jpg");
+		material.specular = new THREE.Color("grey");
+		material.lightMap = THREE.ImageUtils.loadTexture("images/earthlights1k.jpg");
+
+		//Clouds
+		geometry = new THREE.SphereGeometry(0.51, 32, 32)
+		material = new THREE.MeshPhongMaterial();
+		material.alphaMap = THREE.ImageUtils.loadTexture("images/cloud.jpg");
+		material.side = THREE.DoubleSide;
+		material.opacity = 0.8;
+		material.transparent = true;
+		material.depthWrite = false;
+		var cloudMesh = new THREE.Mesh(geometry, material);
+		earthMesh.add(cloudMesh);
+
+		//Star field
+		geometry = new THREE.SphereGeometry(3, 32, 32);
+		material = new THREE.MeshBasicMaterial();
+		material.map = THREE.ImageUtils.loadTexture("images/galaxy_starfield.png");
+		material.side = THREE.BackSide;
+		var mesh = new THREE.Mesh(geometry, material);
+		scene.add(mesh);
+
+		camera.position.z = 1.5;
+
+		var render = function () {
+			//Rotation animation
+			earthMesh.rotation.y += 0.0005;
+  			cloudMesh.rotation.y += 0.00025;
+
+			requestAnimationFrame(render);
+
+			renderer.render(scene, camera);
+		};
+
+		render();
+	</script>
+
+	<footer>
+		<a href="day.html">Day >>></a></br>
+		<a href="day_night.html">Day and Night Together >>></a></br>
+		References:</br>
+		<ul>
+			<li><a href="http://learningthreejs.com/blog/2013/09/16/how-to-make-the-earth-in-webgl/">How to Make the Earth in WebGL</a></li>
+			<li><a href="http://planetpixelemporium.com/earth.html">Texture Source</a></li>
+		</ul>
+	<footer>
+
+</body>
+</html>
